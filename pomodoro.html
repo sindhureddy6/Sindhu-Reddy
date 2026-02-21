@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro</title>
+    <style>
+        .container{
+            font-family: "Roboto",sans-serif;
+            margin: 0 auto;
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+        }
+        .title{
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        button{
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 18px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease-in-out;
+        }
+        button:hover{
+            opacity: 0.7;
+        }
+        .timer{
+            font-size: 72px;
+        }
+        .start{
+            background-color: green;
+        }
+        .stop{
+            background-color: rgb(160, 14, 14);
+        }
+        .reset{
+            background-color: rgb(95, 90, 90);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title js-timer">Pomodoro Timer</h1>
+        <p class="timer">25:00</p>
+        <div class="button-wrapper">
+            <button class="start">Start</button>
+            <button class="stop">Stop</button>
+            <button class="reset">Reset</button>
+        </div>
+    </div>
+    <script>
+        const start=document.querySelector('.start');
+        const stop=document.querySelector('.stop');
+        const reset=document.querySelector('.reset');
+        const timer=document.querySelector('.timer');
+
+        let interval=0;
+        let timeLeft=1500;
+        function updateTimer(){
+            const min=Math.floor(timeLeft/60);
+            const sec=timeLeft%60;
+            let formattedTime=`${min.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`;
+            timer.innerHTML=formattedTime;
+        }
+
+        function startTimer(){
+            interval=setInterval(()=>{
+                timeLeft--;
+                updateTimer();
+                if(timeLeft===0){
+                    alert("Time's up!");
+                    timeLeft=1500;
+                    updateTimer();
+                }
+            },1000);
+        }
+
+        function stopTimer() {
+          clearInterval(interval);  
+        }
+
+        function resetTimer(){
+            clearInterval(interval);
+            timeLeft=1500;
+            updateTimer();
+        }
+
+        start.addEventListener("click",startTimer);
+        stop.addEventListener("click",stopTimer);
+        reset.addEventListener("click",resetTimer);
+        
+    </script>
+</body>
+</html>
