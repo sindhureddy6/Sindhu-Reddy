@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense-tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            font-family: Arial;
+            background: palevioletred;
+            height: 100vh;
+        }
+        .container{
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            width: 350px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .money{
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .income{
+            color: green;
+        }
+        .expense{
+            color: red;
+        }
+        ul{
+            list-style: none;
+            padding: 0;
+        }
+        li{
+            background: #eee;
+            margin: 5px 0;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button{
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: cadetblue;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Expense Tracker</h2>
+        <h4 >Your balance</h4>
+        <h1 class="balance">0</h1>
+        <div class="money">
+            <div>
+                <h4>Income</h4>
+                <p class="income plus">0</p>
+            </div>
+            <div>
+                <h4>Expense</h4>
+                <p class="expense minus">0</p>
+            </div>
+        </div>
+        <h3>History</h3>
+        <ul class="list"></ul>
+        <h3>Add new transaction</h3>
+        <form class="form">
+            <input type="text" placeholder="Description" class="text" required>
+            <input type="number" placeholder="Enter amount(+income,-expense)" class="amount" required>
+            <div class="button">
+                <button class="button-add">Add Transaction</button>
+            </div>
+        </form>
+        <canvas class="mychart"></canvas>
+    </div>
+    <script>
+        const form=document.querySelector('.form');
+        const text=document.querySelector('.text');
+        const amount=document.querySelector('.amount');
+        const list=document.querySelector('.list');
+        const balance=document.querySelector('.balance');
+        const income=document.querySelector('.income');
+        const expense=document.querySelector('.expense');
+
+        //get stored data
+        let transactions=JSON.parse(localStorage.getItem('transactions'));
+        if(transactions===null){
+            transactions=[];
+        }
+
+        //add transaction
+        form.addEventListener('submit',addtransaction);
+        function addtransaction(e) {
+            e.preventDefault();
+
+            const transaction={
+                id:Date.now(),
+                text:text.value,
+                amount:+amount.value
+            };
+            transactions.push(transaction);
+
+            addtransactionDOM(transaction);
+            updatevalues();
+            updateLocalStorage();
+            updatechart();
+
+            text.value="";
+            amount.value="";
+        }
+
+        //add DOM
+        function addtransactionDOM(transaction){
+            const li=document.createElement('li');
+            if(transaction.amount<0){
+                li.classList.add('minus');
+            }else{
+                li.classList.add('plus');
+            }
+            li.innerHTML=transaction.text+""+transaction.amount;
+            list.appendChild(li);
+        }
+
+        //update balance,income,expense
+        function updatevalues(){
+            const amounts=transactions.map(function(t){
+                return t.amount;
+            });
+            let total=0;
+            let income=0;
+            let expense=0;
+            amounts.forEach(function(amount){
+                total+=amount;
+                if(amount>0){
+                    income+=amount;
+                }else{
+                    expense+=amount;
+                }
+            });
+            balance.innerHTML=total;
+            income.innerHTML=income;
+            expense.innerHTML=Math.abs(expense);
+        }
+
+        //save to localstorage
+        function updateLocalStorage(){
+            localStorage.setItem('transactions',JSON.stringify(transactions));
+        }
+
+        //intialize
+        transactions.forEach(addtransactionDOM);
+        updatevalues();
+
+        //chart.js
+        const ctx=document.querySelector('.mychart');
+        let chart;
+        function updatechart(){
+            let income=0;
+            let expense=0;
+            transactions.forEach(function(t){
+                if(t.amount>0){
+                    income+=t.amount;
+                }else{
+                    expense+=math.abs(t.amount);
+                }
+            });
+            if(chart){
+                chart.destroy();
+            }
+            chart=new chart(ctx,{
+                type:"pie",
+                data:{
+                    labels:["income","expense"],
+                    datasets:[{
+                        data:[income,expense],
+                        backgroundColor:["green","red"]
+                    }]
+                }
+            });
+        }
+        updatechart();
+    </script>
+</body>
+</html>
