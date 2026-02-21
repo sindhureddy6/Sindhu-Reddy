@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <title>Analog-clock</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #F6D2F7;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .clock{
+            height: 350px;
+            width: 350px;
+            border-radius: 100%;
+            background-color: #F7B7B7;
+            border: 3px solid darkgrey;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+            position: relative;
+        }
+        img{
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            z-index: 2;
+        }
+        .numbers div{
+            position: absolute;
+            font-size: 27px;
+            font-weight: bold;
+            color: lightgoldenrodyellow;
+        }
+        .twelve{
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .three{
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .six{
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .nine{
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .arrows {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+        .arrows::before{
+            content: "";
+            width: 25px;
+            height: 25px;
+            background-color: darkgreen;
+            border-radius: 100%;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            z-index: 4;
+        }
+        .arrows div{
+            width: 7px;
+            height: 120px;
+            background-color: white;
+            position: absolute;
+            bottom: 50%;
+            z-index: 3;
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+        }
+        .arrows .hour{
+            height: 80px;
+            transform: rotate(30deg);
+        }
+        .arrows .second{
+            background-color: goldenrod;
+            transform: rotate(250deg);
+        }
+    </style>
+    <body>
+        <div class="clock">
+            <div class="numbers">
+                <div class="twelve">12</div>
+                <div class="three">3</div>
+                <div class="six">6</div>
+                <div class="nine">9</div>
+            </div>
+            <div class="arrows">
+                <div class="hour"></div>
+                <div class="minute"></div>
+                <div class="second"></div>
+            </div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Logo_da_Rolex.png/1280px-Logo_da_Rolex.png">
+        </div>
+        <script>
+            const hourEl=document.querySelector('.hour');
+            const minuteEl=document.querySelector('.minute');
+            const secondEl=document.querySelector('.second');
+            
+            function updateClock(){
+                const currentDate=new Date();
+
+                const hour=currentDate.getHours();
+                const minute=currentDate.getMinutes();
+                const second=currentDate.getSeconds();
+
+                const hourDeg=(hour/12)*360;
+                hourEl.style.transform=`rotate(${hourDeg}deg)`;
+
+                const minuteDeg=(minute/60)*360;
+                minuteEl.style.transform=`rotate(${minuteDeg}deg)`;
+
+                const secondDeg=(second/60)*360;
+                secondEl.style.transform=`rotate(${secondDeg}deg)`;
+            }
+            setInterval(updateClock,1000);
+        </script>
+    </body>
+</html>
